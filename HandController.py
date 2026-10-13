@@ -1,6 +1,8 @@
 import sys
+import os
 import cv2
 import mediapipe as mp
+from mediapipe.tasks.python import vision, BaseOptions
 import math
 import time
 import ctypes
@@ -18,6 +20,10 @@ user32.SetProcessDPIAware()
 SYS_W, SYS_H = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 CAM_INDEX = 0
+
+# Required by the MediaPipe Tasks API (replaces the old bundled-model
+# mp.solutions.hands API, which was removed from mediapipe).
+MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hand_landmarker.task")
 
 
 ACTIVE_W = 0.50
@@ -93,28 +99,33 @@ class CyberRender:
 
 class LogicCore:
     def __init__(self):
-        self.hands = mp.solutions.hands.Hands(
-            max_num_hands=1,
-            model_complexity=0,
-            min_detection_confidence=0.5,
+        options = vision.HandLandmarkerOptions(
+            base_options=BaseOptions(model_asset_path=MODEL_PATH),
+            running_mode=vision.RunningMode.VIDEO,
+            num_hands=1,
+            min_hand_detection_confidence=0.5,
             min_tracking_confidence=0.5
         )
+        self.hands = vision.HandLandmarker.create_from_options(options)
         self.cx, self.cy = 0, 0
         self.clicked = False
         self.init = False
+        self._start_time = time.time()
 
     def process(self, frame, renderer):
         h, w, _ = frame.shape
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        res = self.hands.process(rgb)
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
+        timestamp_ms = int((time.time() - self._start_time) * 1000)
+        res = self.hands.detect_for_video(mp_image, timestamp_ms)
 
         # 1. Рисуем зону
         zone_w, zone_h = int(w * ACTIVE_W), int(h * ACTIVE_H)
         zone_x, zone_y = int((w - zone_w) / 2), int((h - zone_h) / 2)
         renderer.draw_hud(frame, (zone_x, zone_y, zone_w, zone_h))
 
-        if res.multi_hand_landmarks:
-            lm = res.multi_hand_landmarks[0].landmark
+        if res.hand_landmarks:
+            lm = res.hand_landmarks[0]
 
 
             raw_x = lm[5].x
