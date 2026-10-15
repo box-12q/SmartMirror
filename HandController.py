@@ -215,7 +215,7 @@ class LogicCore:
                 if self.prev_wrist_y is not None:
                     delta_y = wrist_y - self.prev_wrist_y
                     if abs(delta_y) > SCROLL_DEADZONE:
-                        mouse_scroll(-delta_y * SCROLL_SENSITIVITY)
+                        mouse_scroll(delta_y * SCROLL_SENSITIVITY)
                 self.prev_wrist_y = wrist_y
             else:
                 self.scroll_active = False
