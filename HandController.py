@@ -39,6 +39,10 @@ SMOOTH_FAST = 0.15
 SMOOTH_SLOW = 0.92
 
 
+SCROLL_SENSITIVITY = 3.0
+SCROLL_DEADZONE = 4.0
+
+
 def mouse_move(x, y):
     nx = int(x * 65535 / (SYS_W - 1))
     ny = int(y * 65535 / (SYS_H - 1))
@@ -55,6 +59,9 @@ def mouse_right_down(): user32.mouse_event(0x0008, 0, 0, 0, 0)
 
 
 def mouse_right_up():   user32.mouse_event(0x0010, 0, 0, 0, 0)
+
+
+def mouse_scroll(delta): user32.mouse_event(0x0800, 0, 0, int(delta), 0)
 
 
 class CyberRender:
@@ -116,6 +123,8 @@ class LogicCore:
         self.cx, self.cy = 0, 0
         self.clicked = False
         self.right_clicked = False
+        self.scroll_active = False
+        self.prev_wrist_y = None
         self.init = False
         self._start_time = time.time()
 
@@ -145,9 +154,13 @@ class LogicCore:
             x3, y3 = lm[12].x * w, lm[12].y * h
             pinch_dist_right = math.hypot(x3 - x1, y3 - y1)
 
+            x4, y4 = lm[16].x * w, lm[16].y * h
+            pinch_dist_scroll = math.hypot(x4 - x1, y4 - y1)
+
             palm_size = math.hypot(lm[0].x * w - lm[9].x * w, lm[0].y * h - lm[9].y * h)
             pinch = pinch_dist / palm_size
             pinch_right = pinch_dist_right / palm_size
+            pinch_scroll = pinch_dist_scroll / palm_size
 
 
             target_x = np.interp(raw_x * w, (zone_x, zone_x + zone_w), (0, SYS_W))
@@ -194,6 +207,20 @@ class LogicCore:
                 self.right_clicked = False
                 mouse_right_up()
 
+            # Скролл (большой + безымянный палец). Клики имеют приоритет:
+            # жест скролла игнорируется, пока активен левый или правый клик.
+            wrist_y = lm[0].y * h
+            if not self.clicked and not self.right_clicked and pinch_scroll < PINCH_CLICK:
+                self.scroll_active = True
+                if self.prev_wrist_y is not None:
+                    delta_y = wrist_y - self.prev_wrist_y
+                    if abs(delta_y) > SCROLL_DEADZONE:
+                        mouse_scroll(-delta_y * SCROLL_SENSITIVITY)
+                self.prev_wrist_y = wrist_y
+            else:
+                self.scroll_active = False
+                self.prev_wrist_y = wrist_y
+
 
             mouse_move(int(self.cx), int(self.cy))
 
@@ -203,6 +230,8 @@ class LogicCore:
 
         else:
             self.init = False
+            self.scroll_active = False
+            self.prev_wrist_y = None
             cv2.putText(frame, "NO HAND", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         return frame
