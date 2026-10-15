@@ -51,6 +51,12 @@ def mouse_down(): user32.mouse_event(0x0002, 0, 0, 0, 0)
 def mouse_up():   user32.mouse_event(0x0004, 0, 0, 0, 0)
 
 
+def mouse_right_down(): user32.mouse_event(0x0008, 0, 0, 0, 0)
+
+
+def mouse_right_up():   user32.mouse_event(0x0010, 0, 0, 0, 0)
+
+
 class CyberRender:
     def __init__(self):
         self.angle = 0
@@ -109,6 +115,7 @@ class LogicCore:
         self.hands = vision.HandLandmarker.create_from_options(options)
         self.cx, self.cy = 0, 0
         self.clicked = False
+        self.right_clicked = False
         self.init = False
         self._start_time = time.time()
 
@@ -135,8 +142,12 @@ class LogicCore:
             x2, y2 = lm[8].x * w, lm[8].y * h
             pinch_dist = math.hypot(x2 - x1, y2 - y1)
 
+            x3, y3 = lm[12].x * w, lm[12].y * h
+            pinch_dist_right = math.hypot(x3 - x1, y3 - y1)
+
             palm_size = math.hypot(lm[0].x * w - lm[9].x * w, lm[0].y * h - lm[9].y * h)
             pinch = pinch_dist / palm_size
+            pinch_right = pinch_dist_right / palm_size
 
 
             target_x = np.interp(raw_x * w, (zone_x, zone_x + zone_w), (0, SYS_W))
@@ -168,12 +179,27 @@ class LogicCore:
                     self.clicked = False
                     mouse_up()
 
+            # Правый клик (большой + средний палец). Срабатывает только когда
+            # левый клик не активен в этом кадре, чтобы жесты не конфликтовали.
+            if not self.clicked:
+                if not self.right_clicked:
+                    if pinch_right < PINCH_CLICK:
+                        self.right_clicked = True
+                        mouse_right_down()
+                else:
+                    if pinch_right > PINCH_RELEASE:
+                        self.right_clicked = False
+                        mouse_right_up()
+            elif self.right_clicked:
+                self.right_clicked = False
+                mouse_right_up()
+
 
             mouse_move(int(self.cx), int(self.cy))
 
 
             vis_x, vis_y = int(lm[8].x * w), int(lm[8].y * h)
-            renderer.draw_cursor(frame, vis_x, vis_y, pinch, self.clicked)
+            renderer.draw_cursor(frame, vis_x, vis_y, pinch, self.clicked or self.right_clicked)
 
         else:
             self.init = False
