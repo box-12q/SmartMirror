@@ -4,8 +4,8 @@ import mediapipe as mp
 from mediapipe.tasks.python import vision, BaseOptions
 import math
 import time
-import ctypes
 import numpy as np
+from pynput.mouse import Controller as MouseController, Button
 
 from config import (
     MODEL_PATH, SYS_W, SYS_H, ACTIVE_W, ACTIVE_H,
@@ -14,33 +14,37 @@ from config import (
 )
 
 
-user32 = ctypes.windll.user32
+# Initialize mouse controller
+_mouse = MouseController()
 
 
 def mouse_move(x, y):
-    nx = int(x * 65535 / (SYS_W - 1))
-    ny = int(y * 65535 / (SYS_H - 1))
-    user32.mouse_event(0x8001, nx, ny, 0, 0)
+    _mouse.position = (x, y)
 
 
 def mouse_down():
-    user32.mouse_event(0x0002, 0, 0, 0, 0)
+    _mouse.press(Button.left)
 
 
 def mouse_up():
-    user32.mouse_event(0x0004, 0, 0, 0, 0)
+    _mouse.release(Button.left)
 
 
 def mouse_right_down():
-    user32.mouse_event(0x0008, 0, 0, 0, 0)
+    _mouse.press(Button.right)
 
 
 def mouse_right_up():
-    user32.mouse_event(0x0010, 0, 0, 0, 0)
+    _mouse.release(Button.right)
 
 
 def mouse_scroll(delta):
-    user32.mouse_event(0x0800, 0, 0, int(delta), 0)
+    # pynput scroll: positive = up, negative = down
+    # delta is already in correct sign from our gesture logic
+    # Convert pixel delta to scroll "clicks" (arbitrary scale factor)
+    scroll_clicks = int(delta / 10)
+    if scroll_clicks != 0:
+        _mouse.scroll(0, scroll_clicks)
 
 
 class CyberRender:

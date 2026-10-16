@@ -1,11 +1,22 @@
 """Configuration constants for hand gesture control."""
 import os
-import ctypes
 
-# System metrics
-user32 = ctypes.windll.user32
-user32.SetProcessDPIAware()
-SYS_W, SYS_H = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+try:
+    from pynput.mouse import Controller as MouseController
+    _mouse = MouseController()
+    # Get screen size from pynput (cross-platform)
+    import tkinter as tk
+    _root = tk.Tk()
+    _root.withdraw()
+    SYS_W = _root.winfo_screenwidth()
+    SYS_H = _root.winfo_screenheight()
+    _root.destroy()
+except ImportError:
+    # Fallback to Windows-only ctypes if pynput not available
+    import ctypes
+    user32 = ctypes.windll.user32
+    user32.SetProcessDPIAware()
+    SYS_W, SYS_H = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 # Camera settings
 CAM_INDEX = 0
