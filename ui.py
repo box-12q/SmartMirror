@@ -37,7 +37,7 @@ class VideoThread(QThread):
         self._run_flag = True
 
     def run(self):
-        cap = cv2.VideoCapture(CAM_INDEX, cv2.CAP_DSHOW)
+        cap = cv2.VideoCapture(CAM_INDEX)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAP_WIDTH)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAP_HEIGHT)
         cap.set(cv2.CAP_PROP_FPS, CAP_FPS)
