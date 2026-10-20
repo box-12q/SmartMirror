@@ -1,18 +1,28 @@
 """Core logic for hand gesture recognition and mouse control."""
-import cv2
-import mediapipe as mp
-from mediapipe.tasks.python import vision, BaseOptions
 import math
 import time
+
+import cv2
+import mediapipe as mp
 import numpy as np
-from pynput.mouse import Controller as MouseController, Button
+from mediapipe.tasks.python import BaseOptions, vision
+from pynput.mouse import Button
+from pynput.mouse import Controller as MouseController
 
 from config import (
-    MODEL_PATH, SYS_W, SYS_H, ACTIVE_W, ACTIVE_H,
-    PINCH_CLICK, PINCH_RELEASE, STABILIZER_TRIGGER,
-    SMOOTH_FAST, SMOOTH_SLOW, SCROLL_SENSITIVITY, SCROLL_DEADZONE
+    ACTIVE_H,
+    ACTIVE_W,
+    MODEL_PATH,
+    PINCH_CLICK,
+    PINCH_RELEASE,
+    SCROLL_DEADZONE,
+    SCROLL_SENSITIVITY,
+    SMOOTH_FAST,
+    SMOOTH_SLOW,
+    STABILIZER_TRIGGER,
+    SYS_H,
+    SYS_W,
 )
-
 
 # Initialize mouse controller
 _mouse = MouseController()

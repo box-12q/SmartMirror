@@ -3,3 +3,4 @@ opencv-contrib-python==5.0.0.93
 mediapipe==1.1.0
 numpy==2.5.4
 pynput==1.8.2
+ruff==0.17.1

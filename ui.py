@@ -1,13 +1,29 @@
 """UI components for the hand gesture control application."""
 import sys
+
 import cv2
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QLabel,
-                             QVBoxLayout, QHBoxLayout, QPushButton, QFrame)
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QImage, QPixmap
+from PyQt6.QtWidgets import (
+    QApplication,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
-from config import CAM_INDEX, CAP_WIDTH, CAP_HEIGHT, CAP_FPS, DISPLAY_WIDTH, DISPLAY_HEIGHT
-from logic_core import LogicCore, CyberRender
+from config import (
+    CAM_INDEX,
+    CAP_FPS,
+    CAP_HEIGHT,
+    CAP_WIDTH,
+    DISPLAY_HEIGHT,
+    DISPLAY_WIDTH,
+)
+from logic_core import CyberRender, LogicCore
 
 
 class VideoThread(QThread):
