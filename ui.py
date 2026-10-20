@@ -2,10 +2,9 @@
 import sys
 import cv2
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QLabel,
-                             QVBoxLayout, QHBoxLayout, QPushButton, QFrame,
-                             QGraphicsDropShadowEffect)
+                             QVBoxLayout, QHBoxLayout, QPushButton, QFrame)
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QImage, QPixmap, QColor
+from PyQt6.QtGui import QImage, QPixmap
 
 from config import CAM_INDEX, CAP_WIDTH, CAP_HEIGHT, CAP_FPS, DISPLAY_WIDTH, DISPLAY_HEIGHT
 from logic_core import LogicCore, CyberRender
@@ -67,24 +66,20 @@ class MainWindow(QMainWindow):
 
         self.bg = QFrame()
         self.bg.setStyleSheet("background: #0b0b10; border: 2px solid #00ffaa; border-radius: 10px;")
-        shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(15)
-        shadow.setColor(QColor(0, 255, 170, 80))
-        self.bg.setGraphicsEffect(shadow)
 
         self.inner = QVBoxLayout(self.bg)
 
         self.title_bar = QHBoxLayout()
         self.lbl_title = QLabel("GLAZA_GRISHI")
         self.lbl_title.setStyleSheet("color: #00ffaa; font-family: Consolas; font-weight: bold;")
-        self.btn_minimize = QPushButton("⊟")
+        self.btn_minimize = QPushButton("-")
         self.btn_minimize.setFixedSize(30, 30)
         self.btn_minimize.clicked.connect(self.showMinimized)
         self.btn_minimize.setStyleSheet(
             "QPushButton {"
             "    background: transparent;"
-            "    color: #6B7280;"
-            "    border: none;"
+            "    color: #FFFFFF;"
+            "    border: 1px solid #FFFFFF;"
             "    border-radius: 5px;"
             "}"
             "QPushButton:hover {"
