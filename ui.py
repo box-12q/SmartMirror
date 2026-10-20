@@ -77,6 +77,20 @@ class MainWindow(QMainWindow):
         self.title_bar = QHBoxLayout()
         self.lbl_title = QLabel("GLAZA_GRISHI")
         self.lbl_title.setStyleSheet("color: #00ffaa; font-family: Consolas; font-weight: bold;")
+        self.btn_minimize = QPushButton("⊟")
+        self.btn_minimize.setFixedSize(30, 30)
+        self.btn_minimize.clicked.connect(self.showMinimized)
+        self.btn_minimize.setStyleSheet(
+            "QPushButton {"
+            "    background: transparent;"
+            "    color: #6B7280;"
+            "    border: none;"
+            "    border-radius: 5px;"
+            "}"
+            "QPushButton:hover {"
+            "    background: #D1D5DB;"
+            "}"
+        )
         self.btn_exit = QPushButton("X")
         self.btn_exit.setFixedSize(30, 30)
         self.btn_exit.clicked.connect(self.close)
@@ -84,6 +98,7 @@ class MainWindow(QMainWindow):
 
         self.title_bar.addWidget(self.lbl_title)
         self.title_bar.addStretch()
+        self.title_bar.addWidget(self.btn_minimize)
         self.title_bar.addWidget(self.btn_exit)
         self.inner.addLayout(self.title_bar)
 
