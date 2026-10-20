@@ -1,22 +1,15 @@
 """Configuration constants for hand gesture control."""
 import os
-import sys
 
-# Get screen dimensions (platform-specific, must match coordinate space used by pynput)
-if sys.platform == 'win32':
-    import ctypes
-    user32 = ctypes.windll.user32
-    user32.SetProcessDPIAware()
-    SYS_W, SYS_H = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
-else:
-    # For macOS/Linux, use tkinter (should work correctly on these platforms)
-    # If issues arise, consider using screeninfo library
-    import tkinter as tk
-    _root = tk.Tk()
-    _root.withdraw()
-    SYS_W = _root.winfo_screenwidth()
-    SYS_H = _root.winfo_screenheight()
-    _root.destroy()
+# Get screen dimensions via tkinter (cross-platform: Linux, macOS, Windows).
+# tkinter returns logical pixels, matching the coordinate space used by pynput.
+import tkinter as tk
+
+_root = tk.Tk()
+_root.withdraw()
+SYS_W = _root.winfo_screenwidth()
+SYS_H = _root.winfo_screenheight()
+_root.destroy()
 
 # Camera settings
 CAM_INDEX = 0
