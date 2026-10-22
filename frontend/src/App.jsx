@@ -4,14 +4,15 @@
  * Sidebar (left) + main column (right). The main column contains the
  * header (top) and the content area (fills the rest).
  *
- * No ES module imports here: Babel standalone transpiles JSX in the
- * browser but does not resolve module paths, so the component is
- * attached to `window` and referenced globally from index.jsx.
+ * Sidebar, Header and Content live in src/components/.
+ * No ES module imports: Babel standalone transpiles JSX in the browser
+ * but does not resolve module paths, so components are attached to
+ * `window` by their files and referenced globally.
  */
 function App() {
   return (
     <div className="app">
-      <aside className="app__sidebar"></aside>
+      <Sidebar />
 
       <div className="app__main">
         <header className="app__header"></header>

@@ -22,9 +22,11 @@
   <body>
     <div id="root"></div>
 
-    <!-- App.jsx defines the global `App` component -->
+    <!-- Sidebar component (defines window.Sidebar) -->
+    <script type="text/babel" data-presets="react" src="./components/Sidebar.jsx"></script>
+    <!-- App.jsx composes the layout using window.Sidebar -->
     <script type="text/babel" data-presets="react" src="./App.jsx"></script>
-    <!-- React entry point (JSX, transformed by Babel standalone) -->
+    <!-- React entry point -->
     <script type="text/babel" data-presets="react" src="./index.jsx"></script>
   </body>
 </html>
