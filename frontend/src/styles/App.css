@@ -1,0 +1,33 @@
+/* Global reset + layout */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #fafafa;
+  color: #111;
+}
+
+/* Centered app placeholder */
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.app__title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
