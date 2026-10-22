@@ -1,3 +1,16 @@
+/* Design tokens */
+:root {
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-content: #ede9fe;
+  --color-text: #111111;
+
+  --sidebar-width: 80px;
+  --header-height: 60px;
+  --content-radius: 16px;
+  --content-padding: 20px;
+}
+
 /* Global reset + layout */
 * {
   box-sizing: border-box;
@@ -7,27 +20,50 @@ html,
 body,
 #root {
   height: 100%;
-  margin: 0;
   padding: 0;
 }
 
 body {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background: #fafafa;
-  color: #111;
+  margin: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
-/* Centered app placeholder */
+/* Layout root: sidebar + main column */
 .app {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
   height: 100%;
 }
 
-.app__title {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+.app__sidebar {
+  flex: 0 0 var(--sidebar-width);
+  background: var(--color-surface);
+}
+
+.app__main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.app__header {
+  flex: 0 0 var(--header-height);
+  background: var(--color-surface);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  /* keep the shadow painted above the content below */
+  position: relative;
+  z-index: 1;
+}
+
+.app__content {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--color-content);
+  border-radius: var(--content-radius);
+  padding: var(--content-padding);
 }
