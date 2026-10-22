@@ -58,11 +58,40 @@ body {
 
 .app__header {
   flex: 0 0 var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 20px;
   background: var(--color-surface);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  /* keep the shadow painted above the content below */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 1;
+}
+
+.header__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: #6b7280;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.header__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .app__content {

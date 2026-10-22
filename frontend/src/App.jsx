@@ -15,7 +15,7 @@ function App() {
       <Sidebar />
 
       <div className="app__main">
-        <header className="app__header"></header>
+        <Header />
         <main className="app__content"></main>
       </div>
     </div>
