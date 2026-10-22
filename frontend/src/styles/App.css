@@ -14,6 +14,12 @@
   --content-radius: 16px;
   --content-gap: 20px;
 
+  /* Decorative outer frame */
+  --frame-border: 2px solid #1f2937;
+  --frame-radius: 16px;
+  --frame-inset: 8px;
+  --frame-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+
   /* Sidebar navigation */
   --nav-item-active-bg: #ede9fe;
   --nav-item-active-fg: #6b5b9e;
@@ -45,14 +51,30 @@ body {
   color: var(--color-text);
 }
 
-/* Layout root: sidebar + main column */
-.app {
+/* Outer decorative frame that wraps the whole app.
+   The Electron window itself is frameless, so we draw our own edge. */
+.window-frame {
+  position: relative;
+  width: calc(100% - 2 * var(--frame-inset));
+  height: calc(100% - 2 * var(--frame-inset));
+  margin: var(--frame-inset);
+  border: var(--frame-border);
+  border-radius: var(--frame-radius);
+  background: var(--color-surface);
+  box-shadow: var(--frame-shadow);
+  overflow: hidden;
+}
+
+/* App layout inside the frame */
+.app-content {
   display: flex;
   flex-direction: row;
   height: 100%;
+  width: 100%;
 }
 
-.app__main {
+/* Main column (header + content) */
+.main-area {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -60,7 +82,7 @@ body {
   min-height: 0;
 }
 
-/* Header — a separate white panel above the content */
+/* Header — separate white panel above the content */
 .app__header {
   flex: 0 0 var(--header-height);
   display: flex;
@@ -70,7 +92,6 @@ body {
   padding: 0 20px;
   background: var(--color-surface);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* raise it above the content + keep the shadow visible */
   position: relative;
   z-index: 2;
 }
@@ -106,34 +127,13 @@ body {
   color: var(--color-title);
 }
 
-/* Frameless window controls */
-.header__win-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  margin-left: 8px;
-  border: none;
-  background: none;
-  color: var(--color-idle);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.header__win-btn:hover {
-  background: #f3f4f6;
-  border-radius: 6px;
-}
-
 /* Content — inset lavender area with rounded corners, never touching
-   the window edges (margin on all four sides) */
-.app__content {
+   the frame edges (margin on all four sides, gap under the header) */
+.content {
   flex: 1 1 auto;
   min-height: 0;
   margin: var(--content-gap);
-  margin-top: calc(var(--content-gap) / 2 + 8px); /* gap under the header shadow */
+  margin-top: calc(var(--content-gap) / 2 + 8px);
   background: var(--color-content);
   border-radius: var(--content-radius);
   display: flex;
@@ -245,4 +245,40 @@ body {
 
 .detection-toggle__btn--idle {
   background: var(--color-muted);
+}
+
+/* Window controls over the outer frame (top-right corner) */
+.window-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+}
+
+.window-controls__btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-idle);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.window-controls__btn--minimize:hover {
+  background: #e5e7eb;
+}
+
+.window-controls__btn--close:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fecaca;
 }
