@@ -1,11 +1,12 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 /**
- * Expose a minimal, safe API to the renderer process.
- * The gesture-related IPC handlers will be added here later.
+ * Minimal, safe API exposed to the renderer process.
+ * contextIsolation is on, so the renderer reaches the main process only
+ * through these whitelisted calls.
  */
 contextBridge.exposeInMainWorld('api', {
-  // Intentionally empty for now.
-  // Example (once we have IPC channels):
-  //   onGestureEvent: (callback) => ipcRenderer.on('gesture', (_e, data) => callback(data)),
+  minimize: () => ipcRenderer.send('window:minimize'),
+  close: () => ipcRenderer.send('window:close'),
+  // Gesture-related IPC will be added here later.
 });

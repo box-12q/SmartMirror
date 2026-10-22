@@ -4,11 +4,14 @@
   --color-surface: #ffffff;
   --color-content: #ede9fe;
   --color-text: #111111;
+  --color-accent: #6b5b9e;
+  --color-idle: #6b7280;
+  --color-title: #1f2937;
 
   --sidebar-width: 80px;
   --header-height: 60px;
   --content-radius: 16px;
-  --content-padding: 20px;
+  --content-gap: 20px;
 
   /* Sidebar navigation */
   --nav-item-active-bg: #ede9fe;
@@ -56,6 +59,7 @@ body {
   min-height: 0;
 }
 
+/* Header — a separate white panel above the content */
 .app__header {
   flex: 0 0 var(--header-height);
   display: flex;
@@ -64,9 +68,10 @@ body {
   gap: 16px;
   padding: 0 20px;
   background: var(--color-surface);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* raise it above the content + keep the shadow visible */
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .header__left {
@@ -75,13 +80,19 @@ body {
   gap: 12px;
 }
 
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .header__icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: none;
   background: none;
-  color: #6b7280;
+  color: var(--color-idle);
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
@@ -91,21 +102,52 @@ body {
 .header__title {
   font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--color-title);
 }
 
+/* Frameless window controls */
+.header__win-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-left: 8px;
+  border: none;
+  background: none;
+  color: var(--color-idle);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.header__win-btn:hover {
+  background: #f3f4f6;
+  border-radius: 6px;
+}
+
+/* Content — inset lavender area with rounded corners, never touching
+   the window edges (margin on all four sides) */
 .app__content {
   flex: 1 1 auto;
   min-height: 0;
+  margin: var(--content-gap);
+  margin-top: calc(var(--content-gap) / 2 + 8px); /* gap under the header shadow */
   background: var(--color-content);
   border-radius: var(--content-radius);
-  padding: var(--content-padding);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Sidebar */
 .app__sidebar {
   flex: 0 0 var(--sidebar-width);
+  width: var(--sidebar-width);
   background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sidebar__nav {
@@ -145,4 +187,26 @@ body {
 .sidebar__item--active {
   background: var(--nav-item-active-bg);
   color: var(--nav-item-active-fg);
+}
+
+/* Camera preview placeholder */
+.video-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.video-player__icon {
+  font-size: 64px;
+  line-height: 1;
+  color: var(--color-accent);
+  opacity: 0.3;
+}
+
+.video-player__label {
+  font-size: 14px;
+  color: var(--color-accent);
+  opacity: 0.5;
 }

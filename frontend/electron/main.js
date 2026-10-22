@@ -1,5 +1,8 @@
 const path = require('node:path');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
+
+/** Application window (kept in module scope for IPC handlers below). */
+let mainWindow = null;
 
 /**
  * Create the main application window.
@@ -7,7 +10,7 @@ const { app, BrowserWindow } = require('electron');
  * while the web content is still loading.
  */
 function createMainWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     frame: false,
@@ -20,8 +23,22 @@ function createMainWindow() {
     },
   });
 
-  win.loadFile(path.join(__dirname, '..', 'src', 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, '..', 'src', 'index.html'));
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 }
+
+// Window controls for the frameless window (buttons live in the renderer,
+// they reach us only through the preload API).
+ipcMain.on('window:minimize', () => {
+  if (mainWindow) mainWindow.minimize();
+});
+
+ipcMain.on('window:close', () => {
+  if (mainWindow) mainWindow.close();
+});
 
 app.whenReady().then(() => {
   createMainWindow();
