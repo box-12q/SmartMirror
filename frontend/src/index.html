@@ -4,19 +4,24 @@
     <meta charset="UTF-8" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; connect-src https://unpkg.com; img-src 'self' data:"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' file: https://unpkg.com; img-src 'self' data:"
     />
     <title>Gesture Control</title>
 
     <!-- React via CDN (unpkg) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <!-- Babel standalone for JSX transformation in the browser -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Babel standalone for JSX transformation in the browser.
+         Pinned to 7.x: Babel 8's react preset emits automatic-runtime
+         `import ... from "react/jsx-runtime"` statements which break
+         when executed as classic (non-module) scripts. -->
+    <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
 
     <link rel="stylesheet" href="./styles/App.css" />
   </head>
   <body>
+    <div id="root"></div>
+
     <!-- App.jsx defines the global `App` component -->
     <script type="text/babel" data-presets="react" src="./App.jsx"></script>
     <!-- React entry point (JSX, transformed by Babel standalone) -->
