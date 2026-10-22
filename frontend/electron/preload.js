@@ -7,10 +7,12 @@ const { contextBridge, ipcRenderer } = require('electron');
  *
  * Name and method names follow the app convention:
  *   window.electronAPI.minimizeWindow()
+ *   window.electronAPI.maximizeWindow()
  *   window.electronAPI.closeWindow()
  * Gesture-related IPC will be added here later.
  */
 contextBridge.exposeInMainWorld('electronAPI', {
   minimizeWindow: () => ipcRenderer.send('window:minimize'),
+  maximizeWindow: () => ipcRenderer.send('window:maximize'),
   closeWindow: () => ipcRenderer.send('window:close'),
 });

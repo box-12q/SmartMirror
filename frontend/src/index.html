@@ -22,6 +22,9 @@
   <body>
     <div id="root"></div>
 
+    <!-- WindowControls + TitleBar (order matters: TitleBar uses WindowControls) -->
+    <script type="text/babel" data-presets="react" src="./components/WindowControls.jsx"></script>
+    <script type="text/babel" data-presets="react" src="./components/TitleBar.jsx"></script>
     <!-- Sidebar component (defines window.Sidebar) -->
     <script type="text/babel" data-presets="react" src="./components/Sidebar.jsx"></script>
     <!-- Header component (defines window.Header) -->
@@ -30,9 +33,7 @@
          DetectionToggle must be defined before VideoPlayer uses it) -->
     <script type="text/babel" data-presets="react" src="./components/DetectionToggle.jsx"></script>
     <script type="text/babel" data-presets="react" src="./components/VideoPlayer.jsx"></script>
-    <!-- Window controls over the outer frame (defines window.WindowControls) -->
-    <script type="text/babel" data-presets="react" src="./components/WindowControls.jsx"></script>
-    <!-- App.jsx composes the layout using window.Sidebar, window.Header, window.VideoPlayer -->
+    <!-- App.jsx composes the layout using TitleBar, Sidebar, Header, VideoPlayer -->
     <script type="text/babel" data-presets="react" src="./App.jsx"></script>
     <!-- React entry point -->
     <script type="text/babel" data-presets="react" src="./index.jsx"></script>

@@ -1,6 +1,10 @@
 /* Design tokens */
 :root {
-  --color-bg: #fafafa;
+  /* Backdrop tones: outside-the-frame desktop and the frame background
+     the floating cards sit on. Placeholder values — to be tuned against
+     the target mockup. */
+  --color-desktop: #d6d9e2;
+  --color-backdrop: #e6e8f0;
   --color-surface: #ffffff;
   --color-content: #ede9fe;
   --color-text: #111111;
@@ -9,24 +13,20 @@
   --color-muted: #9ca3af;
   --color-title: #1f2937;
 
-  --sidebar-width: 80px;
+  --sidebar-width: 72px;
   --header-height: 60px;
+  --titlebar-height: 42px;
   --content-radius: 16px;
-  --content-gap: 20px;
-
-  /* Decorative outer frame */
-  --frame-border: 2px solid #1f2937;
-  --frame-radius: 16px;
-  --frame-inset: 8px;
-  --frame-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --frame-radius: 18px;
+  --card-radius: 16px;
+  --card-gap: 10px;
 
   /* Sidebar navigation */
   --nav-item-active-bg: #ede9fe;
   --nav-item-active-fg: #6b5b9e;
   --nav-item-idle-fg: #6b7280;
-  --nav-item-radius: 8px;
-  --nav-item-top-offset: 40px;
-  --nav-item-gap: 30px;
+  --nav-item-radius: 12px;
+  --nav-item-gap: 22px;
   --nav-icon-size: 24px;
   --nav-label-size: 10px;
 }
@@ -47,7 +47,7 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: sans-serif;
-  background: var(--color-bg);
+  background: var(--color-desktop);
   color: var(--color-text);
 }
 
@@ -55,34 +55,173 @@ body {
    The Electron window itself is frameless, so we draw our own edge. */
 .window-frame {
   position: relative;
-  width: calc(100% - 2 * var(--frame-inset));
-  height: calc(100% - 2 * var(--frame-inset));
-  margin: var(--frame-inset);
-  border: var(--frame-border);
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  margin: 8px;
+  border: 2px solid #1f2937;
   border-radius: var(--frame-radius);
-  background: var(--color-surface);
-  box-shadow: var(--frame-shadow);
+  background: var(--color-backdrop);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
 
-/* App layout inside the frame */
+/* Title bar: app icon + active tab + window controls, draggable */
+.titlebar {
+  flex: 0 0 var(--titlebar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  -webkit-app-region: drag;
+}
+
+.titlebar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.titlebar button {
+  -webkit-app-region: no-drag;
+}
+
+.titlebar__app-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.85;
+}
+
+.titlebar__tab {
+  padding: 3px 12px;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* Window controls (inside the title bar) */
+.window-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.window-controls__btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-idle);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.window-controls__btn--minimize:hover,
+.window-controls__btn--maximize:hover {
+  background: #e5e7eb;
+}
+
+.window-controls__btn--close:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fecaca;
+}
+
+/* App layout inside the frame: floating cards on the backdrop */
 .app-content {
   display: flex;
   flex-direction: row;
-  height: 100%;
-  width: 100%;
+  gap: var(--card-gap);
+  padding: 0 var(--card-gap) var(--card-gap);
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-/* Main column (header + content) */
+/* Sidebar — a compact white card */
+.app__sidebar {
+  flex: 0 0 var(--sidebar-width);
+  width: var(--sidebar-width);
+  background: var(--color-surface);
+  border-radius: var(--card-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.sidebar__menu {
+  border: none;
+  background: none;
+  color: var(--color-idle);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px 12px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--nav-item-gap);
+  margin-top: 4px;
+}
+
+/* Navigation item: icon above label, pill-shaped */
+.sidebar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 56px;
+  padding: 10px 0;
+  border: none;
+  background: none;
+  border-radius: var(--nav-item-radius);
+  color: var(--nav-item-idle-fg);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.sidebar__icon {
+  font-size: var(--nav-icon-size);
+  line-height: 1;
+}
+
+.sidebar__label {
+  font-size: var(--nav-label-size);
+}
+
+/* Active item (Home) */
+.sidebar__item--active {
+  background: var(--nav-item-active-bg);
+  color: var(--nav-item-active-fg);
+}
+
+/* Workspace card: header + content live inside a rounded white card */
 .main-area {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
+  background: var(--color-surface);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Header — separate white panel above the content */
+/* Header embedded in the workspace card */
 .app__header {
   flex: 0 0 var(--header-height);
   display: flex;
@@ -91,15 +230,9 @@ body {
   gap: 16px;
   padding: 0 20px;
   background: var(--color-surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: relative;
-  z-index: 2;
-}
-
-.header__left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  z-index: 1;
 }
 
 .header__right {
@@ -128,66 +261,16 @@ body {
 }
 
 /* Content — inset lavender area with rounded corners, never touching
-   the frame edges (margin on all four sides, gap under the header) */
+   the card edges (margin on all four sides) */
 .content {
   flex: 1 1 auto;
   min-height: 0;
-  margin: var(--content-gap);
-  margin-top: calc(var(--content-gap) / 2 + 8px);
+  margin: 16px 20px 20px;
   background: var(--color-content);
   border-radius: var(--content-radius);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Sidebar */
-.app__sidebar {
-  flex: 0 0 var(--sidebar-width);
-  width: var(--sidebar-width);
-  background: var(--color-surface);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sidebar__nav {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--nav-item-gap);
-  margin-top: var(--nav-item-top-offset);
-}
-
-/* Navigation item: icon above label */
-.sidebar__item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  width: 60px;
-  padding: 8px 0;
-  border: none;
-  background: none;
-  border-radius: var(--nav-item-radius);
-  color: var(--nav-item-idle-fg);
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.sidebar__icon {
-  font-size: var(--nav-icon-size);
-  line-height: 1;
-}
-
-.sidebar__label {
-  font-size: var(--nav-label-size);
-}
-
-/* Active item (Home) */
-.sidebar__item--active {
-  background: var(--nav-item-active-bg);
-  color: var(--nav-item-active-fg);
 }
 
 /* Camera preview placeholder */
@@ -215,19 +298,19 @@ body {
   opacity: 0.5;
 }
 
-/* Hand-detection on/off switch, pinned to the bottom-right corner */
+/* Hand-detection switch: two buttons joined into one capsule */
 .detection-toggle {
   position: absolute;
   right: 20px;
   bottom: 20px;
   display: flex;
-  gap: 4px;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 .detection-toggle__btn {
   width: 40px;
   height: 40px;
-  border-radius: 20px;
   border: none;
   display: flex;
   align-items: center;
@@ -239,46 +322,19 @@ body {
   padding: 0;
 }
 
+/* Capsule shape: outer corners rounded, inner seam straight */
+.detection-toggle__btn:first-child {
+  border-radius: 20px 0 0 20px;
+}
+
+.detection-toggle__btn:last-child {
+  border-radius: 0 20px 20px 0;
+}
+
 .detection-toggle__btn--active {
   background: var(--color-accent);
 }
 
 .detection-toggle__btn--idle {
   background: var(--color-muted);
-}
-
-/* Window controls over the outer frame (top-right corner) */
-.window-controls {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  gap: 6px;
-  z-index: 3;
-}
-
-.window-controls__btn {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--color-idle);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-}
-
-.window-controls__btn--minimize:hover {
-  background: #e5e7eb;
-}
-
-.window-controls__btn--close:hover {
-  background: #fee2e2;
-  color: #ef4444;
-  border-color: #fecaca;
 }

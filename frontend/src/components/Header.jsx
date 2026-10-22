@@ -1,7 +1,6 @@
 /**
- * Top header bar: menu icon + app title on the left, overflow menu on
- * the right. Window controls live in their own component over the outer
- * frame (see WindowControls.jsx).
+ * Card header inside the white workspace: title on the left, overflow
+ * menu on the right. Window controls live in the TitleBar above.
  * Loaded by index.html as a Babel-standalone script before App.jsx and
  * exposed on `window` (Babel standalone does not resolve ES module paths
  * when running from file:// inside Electron).
@@ -9,14 +8,7 @@
 function Header() {
   return (
     <header className="app__header">
-      <div className="header__left">
-        {/* Menu (hamburger) */}
-        <button type="button" className="header__icon-btn" aria-label="Menu">
-          {'\u2630'}
-        </button>
-
-        <span className="header__title">Gesture Control</span>
-      </div>
+      <span className="header__title">Gesture Control</span>
 
       <div className="header__right">
         {/* Overflow menu (vertical ellipsis) */}

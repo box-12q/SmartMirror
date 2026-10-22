@@ -1,19 +1,20 @@
 /**
- * Main application component: decorative window frame + three-part layout.
+ * Main application layout: title bar + sidebar + white workspace card.
  *
- * window-frame  — outer decorative border (the app runs frameless, so we
- *                 draw our own window edge)
- * app-content   — sidebar + main column
- * main-area     — header (top) + content (rest) with the camera preview
+ * window-frame  — decorative outer border (app runs frameless)
+ * titlebar      — app icon / active tab / window controls (draggable)
+ * app-content   — floating cards on the darker backdrop:
+ *                   sidebar card + workspace card
+ * main-area     — white card with the header and the lavender content
  *
- * Sidebar, Header, VideoPlayer and WindowControls live in src/components/.
- * No ES module imports: Babel standalone transpiles JSX in the browser
- * but does not resolve module paths, so components are attached to
- * `window` by their files and referenced globally.
+ * Components live in src/components/ and are exposed on `window`
+ * (Babel standalone does not resolve ES module paths).
  */
 function App() {
   return (
     <div className="window-frame">
+      <TitleBar />
+
       <div className="app-content">
         <Sidebar />
 
@@ -24,9 +25,6 @@ function App() {
           </div>
         </div>
       </div>
-
-      {/* Minimize/close, pinned over the frame's top-right corner */}
-      <WindowControls />
     </div>
   );
 }

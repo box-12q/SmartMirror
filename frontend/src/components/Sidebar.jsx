@@ -1,5 +1,5 @@
 /**
- * Sidebar navigation component.
+ * Sidebar: hamburger + navigation (Home / Settings / Restart).
  * Loaded by index.html as a Babel-standalone script BEFORE App.jsx and
  * exposed on `window` (Babel standalone does not resolve ES module paths
  * when running from file:// inside Electron).
@@ -7,6 +7,11 @@
 function Sidebar() {
   return (
     <aside className="app__sidebar">
+      {/* Hamburger at the top, centered over the nav icons below */}
+      <button type="button" className="sidebar__menu" aria-label="Toggle sidebar">
+        {'\u2630'}
+      </button>
+
       <nav className="sidebar__nav">
         {/* Home — active item */}
         <button type="button" className="sidebar__item sidebar__item--active">

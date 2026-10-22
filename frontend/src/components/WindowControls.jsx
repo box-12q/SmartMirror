@@ -1,10 +1,7 @@
 /**
- * Window controls for the frameless window: minimize and close,
- * pinned over the top-right corner of the outer frame.
- *
- * Rendered by App inside .window-frame (position: absolute anchors to
- * the frame). Talks to the main process through the preload API
- * (contextIsolation is on, so no ipcRenderer in renderer files).
+ * Window controls for the frameless window: minimize, maximize and close.
+ * Rendered inside the TitleBar (see TitleBar.jsx); talks to the main
+ * process through the preload API (contextIsolation is on).
  */
 function WindowControls() {
   return (
@@ -16,6 +13,15 @@ function WindowControls() {
         onClick={() => window.electronAPI && window.electronAPI.minimizeWindow()}
       >
         {'\u229F'}
+      </button>
+
+      <button
+        type="button"
+        className="window-controls__btn window-controls__btn--maximize"
+        aria-label="Maximize"
+        onClick={() => window.electronAPI && window.electronAPI.maximizeWindow()}
+      >
+        {'\u229E'}
       </button>
 
       <button
