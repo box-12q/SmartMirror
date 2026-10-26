@@ -10,14 +10,12 @@
   --color-text: #111111;
   --color-accent: #6b5b9e;
   --color-idle: #6b7280;
-  --color-muted: #9ca3af;
   --color-title: #1f2937;
 
   --sidebar-width: 72px;
   --header-height: 60px;
   --titlebar-height: 42px;
   --content-radius: 16px;
-  --frame-radius: 18px;
   --card-radius: 16px;
   --card-gap: 10px;
 
@@ -53,6 +51,10 @@ body {
 
 /* Outer decorative frame that wraps the whole app.
    The Electron window itself is frameless, so we draw our own edge. */
+/* Outer container of the app. No border, no rounded corners, no shadow:
+   the OS window edge is the outermost boundary — content fills it
+   completely (with rounded corners the window background would peek
+   through the clipped edges). */
 .window-frame {
   position: relative;
   display: flex;
@@ -60,8 +62,6 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  border: 2px solid #1f2937;
-  border-radius: var(--frame-radius);
   background: var(--color-backdrop);
   overflow: hidden;
 }
@@ -301,29 +301,36 @@ body {
   opacity: 0.5;
 }
 
-/* Hand-detection switch: one dark-purple capsule, two halves split by a
-   thin vertical seam. The selected half carries the filled centre dot. */
+/* Hand-detection switch: one capsule, two halves. Active half keeps the
+   signature purple, inactive half is tinted soft translucent gray. A
+   thin vertical seam separates them. */
 .detection-toggle {
   position: absolute;
   right: 20px;
   bottom: 20px;
   display: flex;
-  background: var(--color-accent);
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
 }
 
 .detection-toggle__half {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  background: transparent;
   color: #ffffff;
   cursor: pointer;
   padding: 0;
+}
+
+.detection-toggle__half--active {
+  background: var(--color-accent);
+}
+
+.detection-toggle__half--idle {
+  background: rgba(156, 163, 175, 0.55);
 }
 
 /* Thin seam between the two halves */
@@ -332,7 +339,7 @@ body {
 }
 
 .detection-toggle__half:hover {
-  background: rgba(255, 255, 255, 0.12);
+  filter: brightness(1.12);
 }
 
 .detection-toggle__half svg {
