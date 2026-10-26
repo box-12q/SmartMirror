@@ -116,14 +116,19 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e5e7eb;
+  /* Flat: no border, no resting background — icons sit directly on the
+     title bar. Border-radius only shapes the hover highlight. */
+  border: none;
   border-radius: 8px;
   background: transparent;
   color: var(--color-idle);
-  font-size: 14px;
   line-height: 1;
   cursor: pointer;
   padding: 0;
+}
+
+.window-controls__btn svg {
+  display: block;
 }
 
 .window-controls__btn--minimize:hover,
@@ -134,7 +139,6 @@ body {
 .window-controls__btn--close:hover {
   background: #fee2e2;
   color: #ef4444;
-  border-color: #fecaca;
 }
 
 /* App layout inside the frame: floating cards on the backdrop */
