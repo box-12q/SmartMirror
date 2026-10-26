@@ -1,5 +1,5 @@
 /**
- * Sidebar: hamburger + navigation (Home / Settings / Restart).
+ * Sidebar: hamburger + navigation (Home / Restart).
  * Loaded by index.html as a Babel-standalone script BEFORE App.jsx and
  * exposed on `window` (Babel standalone does not resolve ES module paths
  * when running from file:// inside Electron).
@@ -19,12 +19,6 @@ function Sidebar() {
               so the icon can be tinted with CSS like the other glyphs */}
           <span className="sidebar__icon">{'\u{1F3E0}\uFE0E'}</span>
           <span className="sidebar__label">Home</span>
-        </button>
-
-        {/* Settings */}
-        <button type="button" className="sidebar__item">
-          <span className="sidebar__icon">{'\u2699\uFE0E'}</span>
-          <span className="sidebar__label">Settings</span>
         </button>
 
         {/* Restart */}
