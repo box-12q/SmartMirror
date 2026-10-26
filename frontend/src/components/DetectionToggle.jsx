@@ -3,8 +3,11 @@
  * the camera preview. Uses useState (React global from the UMD build —
  * Babel standalone does not process ES module imports).
  *
- * For now the state only drives styling; wiring it to the Python
- * detection pipeline will go through the preload API later.
+ * Visual design: a single dark-purple capsule split by a thin vertical
+ * seam. Both halves show concentric ring outlines; the ACTIVE half also
+ * has a filled white dot in the centre. The active half follows the
+ * React state; wiring to the Python detection pipeline will go through
+ * the preload API later.
  */
 const { useState } = React;
 
@@ -13,30 +16,36 @@ function DetectionToggle() {
 
   return (
     <div className="detection-toggle">
-      {/* Eye — detection on */}
+      {/* Detection ON */}
       <button
         type="button"
-        className={
-          'detection-toggle__btn ' + (enabled ? 'detection-toggle__btn--active' : 'detection-toggle__btn--idle')
-        }
+        className="detection-toggle__half"
         aria-label="Enable hand detection"
         aria-pressed={enabled}
         onClick={() => setEnabled(true)}
       >
-        {'\u{1F441}\uFE0E'}
+        {/* Concentric rings + (when active) a filled centre dot */}
+        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+          <circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="1.25" />
+          <circle cx="11" cy="11" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.25" />
+          {enabled && <circle cx="11" cy="11" r="2" fill="currentColor" />}
+        </svg>
       </button>
 
-      {/* Crossed circle — detection off */}
+      {/* Detection OFF */}
       <button
         type="button"
-        className={
-          'detection-toggle__btn ' + (!enabled ? 'detection-toggle__btn--active' : 'detection-toggle__btn--idle')
-        }
+        className="detection-toggle__half"
         aria-label="Disable hand detection"
         aria-pressed={!enabled}
         onClick={() => setEnabled(false)}
       >
-        {'\u{1F6AB}\uFE0E'}
+        {/* Same rings; the centre dot appears here when this side is selected */}
+        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+          <circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="1.25" />
+          <circle cx="11" cy="11" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.25" />
+          {!enabled && <circle cx="11" cy="11" r="2" fill="currentColor" />}
+        </svg>
       </button>
     </div>
   );
